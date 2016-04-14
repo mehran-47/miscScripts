@@ -1,0 +1,2 @@
+#!/bin/bash
+cvlc -q -L rtsp://192.168.10.20:5544/test &
