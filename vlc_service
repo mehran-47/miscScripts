@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+import sys
+from subprocess import call
+from shlex import split 
+
+def start():	
+	call(split('ip addr add 192.168.189.200/32 dev eth0'))
+	call(split("su magic -c \"vlc -vvv /home/magic/Desktop/kurzgezagt_safe_and_sorry.mp4 --sout '#rtp{sdp=rtsp://192.168.189.200:5544/test}' --loop --ttl 1 --daemon\""))
+
+def stop():
+	call(split('killall vlc'), shell=False)
+	call(split('ip addr del 192.168.189.200/32 dev eth0'))
+if __name__ == '__main__':
+	actionMap = {'start':start, 'stop':stop}
+	if sys.argv[1:]:
+		if sys.argv[1] in actionMap:
+			actionMap[sys.argv[1]]()
