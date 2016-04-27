@@ -2,5 +2,5 @@
 #!/bin/bash
 myDate=$(date +%T+%N)
 logger "IP component is terminating:$myDate"
-ip addr del 192.168.189.200 dev eth0
+ip addr del 192.168.189.200/32 dev eth0
 

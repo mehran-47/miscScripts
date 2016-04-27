@@ -1,4 +1,4 @@
 #!/bin/bash
 myDate=$(date +%T+%N)
 logger "IP component is starting:$myDate"
-ip addr add 192.168.189.200 dev eth0
+ip addr add 192.168.189.200/32 dev eth0
