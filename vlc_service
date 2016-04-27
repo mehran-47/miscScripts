@@ -1,17 +1,24 @@
 #!/usr/bin/env python
-import sys
+import sys, json
 from subprocess import call
 from shlex import split 
 
-def start():	
-	call(split('ip addr add 192.168.189.200/32 dev eth0'))
-	call(split("su magic -c \"vlc -vvv /home/magic/Desktop/kurzgezagt_safe_and_sorry.mp4 --sout '#rtp{sdp=rtsp://192.168.189.200:5544/test}' --loop --ttl 1 --daemon\""))
+class VidStreamService():
+	def __init__(self, configFile):
+		with open(configFile, 'r') as f: config = json.loads(f.read())
+		self.ip = config['ip']
+		self.dev = config['dev']
+		self.video = config['video_path']
 
-def stop():
-	call(split('killall vlc'), shell=False)
-	call(split('ip addr del 192.168.189.200/32 dev eth0'))
+	def start(self):	
+		call(split('ip addr add '+ self.ip + ' dev ' + self.dev))
+		call(split("su magic -c \"vlc -vvv "+ self.video +" --sout '#rtp{sdp=rtsp://192.168.189.200:5544/test}' --loop --ttl 1 --daemon\""))
+
+	def stop(self):
+		call(split('killall vlc'))
+		call(split('ip addr del '+ self.ip + ' dev ' + self.dev))
+
 if __name__ == '__main__':
-	actionMap = {'start':start, 'stop':stop}
-	if sys.argv[1:]:
-		if sys.argv[1] in actionMap:
-			actionMap[sys.argv[1]]()
+	vs = VidStreamService('/vlc_service_config.json')
+	actionMap = {'start':vs.start , 'stop':vs.stop}
+	if sys.argv[1:] and sys.argv[1] in actionMap: actionMap[sys.argv[1]]()
