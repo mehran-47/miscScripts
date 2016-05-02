@@ -18,12 +18,14 @@ class VidStreamService():
 		call(['/opt/videos/playvid', execString])
 
 	def stop(self):
-		with open('/tmp/vlc_service.pid', 'r') as pf: pid = str(int(pf.read())+3)
+		#with open('/tmp/vlc_service.pid', 'r') as pf: pid = str(int(pf.read())+3)
+		with open('/tmp/vlc_service.pid', 'r') as pf: pid = pf.read()
 		call(split('kill -9 '+pid))
 		call(split('ip addr del '+ self.ip + ' dev ' + self.dev))
 
 	def status(self):
-		with open('/tmp/vlc_service.pid', 'r') as pf: pid = str(int(pf.read())+3)
+		#with open('/tmp/vlc_service.pid', 'r') as pf: pid = str(int(pf.read())+3)
+		with open('/tmp/vlc_service.pid', 'r') as pf: pid = pf.read().strip()
 		if os.path.isdir('/proc/'+pid): 
 			print('VLC video streaming service is running.\nPID %s' %(pid))
 		else:
